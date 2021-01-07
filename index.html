@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shooting Game in Virtual Reality</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+    <script src="https://recast-api.donmccurdy.com/aframe-inspector-plugin-recast.js"></script>
+
+    <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+
+    <script src="./shoot.js"></script>
+    <script src="./gameObjects.js"></script>
+  </head>
+  <body>
+    <a-scene id="scene" inspector-plugin-recast>
+      <a-assets>
+        <a-asset-item id="collider" src="./models/navmesh.gltf"></a-asset-item>
+        <a-asset-item
+          id="shooter"
+          src="./models/shooter/gun.gltf"
+        ></a-asset-item>
+        <img id="land" src="./images/land.jpg" />
+      </a-assets>
+
+      <!--Light-->
+      <a-entity light="type: ambient; color: #fff; intensity:0.5"></a-entity>
+
+      <!--A-Frame Environment-->
+
+      <a-entity position="0 0 0" environment="preset: egypt;"></a-entity>
+
+      <!-- Camera Rig -->
+      <a-entity
+        movement-controls="speed: 0.2; constrainToNavMesh: true"
+        position="-5 1 7"
+      >
+        <!-- Camera -->
+        <a-entity
+          camera
+          position="0 1.6 5"
+          look-controls="pointerLockEnabled: false"
+        >
+          <a-cursor nav-debug-pointer></a-cursor>
+          <a-entity
+            id="weapon"
+            gltf-model="#shooter"
+            position="0 -5 0" 
+            rotation="0 180 0.7" 
+            bullets          
+          >
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity boxes wire-fence></a-entity>
+
+      <a-plane
+        id="ground"
+        position="0 1 0"
+        rotation="-90 0 0"
+        height="200"
+        width="200"
+        color="#4D3119"
+      >
+      </a-plane>
+
+      <!-- Navigation Mesh -->
+      <a-entity
+        id="navigation-mesh"
+        gltf-model="#collider"
+        nav-mesh
+        position="0 -0.1 0"
+        visible="false"
+      >
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
