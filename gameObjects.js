@@ -1,8 +1,8 @@
 AFRAME.registerComponent("boxes", {
   schema: {
-    height: { type: "number", default: 2 },
-    width: { type: "number", default: 2 },
-    depth: { type: "number", default: 2 },
+    height: { type: "number", default: 1 },
+    width: { type: "number", default: 1 },
+    depth: { type: "number", default: 1 },
   },
   init: function () {
     var sceneEl = document.querySelector("#scene");
@@ -55,11 +55,12 @@ AFRAME.registerComponent("boxes", {
       var box = document.createElement("a-entity");
 
       posX = px[i];
-      posY = 2;
+      posY = 1.5;
       posZ = pz[i];
 
       position = { x: posX, y: posY, z: posZ };
 
+      box.setAttribute("id", "box"+i);
       box.setAttribute("position", position);
 
       box.setAttribute("geometry", {
@@ -73,6 +74,8 @@ AFRAME.registerComponent("boxes", {
         src: "./images/boxtexture1.jpg",
         repeat: "1 1 1",
       });
+
+      box.setAttribute("static-body", {});
 
       sceneEl.appendChild(box);
     }
@@ -131,6 +134,16 @@ AFRAME.registerComponent("wire-fence", {
         "./models/barbed_wire_fence/scene.gltf"
       );
       wireFence3.setAttribute("rotation", { x: 0, y: 90, z: 0 });
+
+      wireFence.setAttribute("static-body", {});
+      wireFence1.setAttribute("static-body", {});
+      wireFence2.setAttribute("static-body", {});
+      wireFence3.setAttribute("static-body", {});
+
+      wireFence.setAttribute("id", "wireFence"+i);
+      wireFence1.setAttribute("id", "wireFence1"+i);
+      wireFence2.setAttribute("id", "wireFence2"+i);
+      wireFence3.setAttribute("id", "wireFence3"+i);
 
       sceneEl.appendChild(wireFence);
       sceneEl.appendChild(wireFence1);
