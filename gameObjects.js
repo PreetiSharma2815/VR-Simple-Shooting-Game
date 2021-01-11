@@ -55,12 +55,13 @@ AFRAME.registerComponent("boxes", {
       var box = document.createElement("a-entity");
 
       posX = px[i];
-      posY = 1.5;
+      posY = 1;
       posZ = pz[i];
 
       position = { x: posX, y: posY, z: posZ };
 
       box.setAttribute("id", "box"+i);
+      box.className += " targets";
       box.setAttribute("position", position);
 
       box.setAttribute("geometry", {

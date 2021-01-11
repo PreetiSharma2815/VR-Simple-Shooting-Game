@@ -1,4 +1,8 @@
 AFRAME.registerComponent("bullets", {
+  schema:{
+    targets:{type:"number",default:10}
+  },
+
   init: function () {
     this.shootBullet();
   },
@@ -7,21 +11,22 @@ AFRAME.registerComponent("bullets", {
       if (e.key === "z") {
         var scene = document.querySelector("#scene");
         var cameraRig = document.querySelector("#camera-rig");
-        var direction = new THREE.Vector3();
-        var camera = document.querySelector("#camera").object3D;
-        camera.getWorldDirection(direction);
-
         var position = cameraRig.getAttribute("position");
 
         var bullet = document.createElement("a-entity");
-
         bullet.setAttribute("material", "color", "black");
 
         bullet.setAttribute("position", {
           x: position.x,
           y: position.y + 1.3,
-          z: position.z - 0.8,
+          z: position.z -0.8,
         });
+
+        //set the velocity and it's direction
+
+        var direction = new THREE.Vector3();
+        var camera = document.querySelector("#camera").object3D;
+        camera.getWorldDirection(direction);
 
         bullet.setAttribute("velocity", direction.multiplyScalar(-10));
 
@@ -45,29 +50,29 @@ AFRAME.registerComponent("bullets", {
     if (e.detail.body.el.id === "environment") {
       if (
         e.detail.target.el.body.position.z > 85 &&
-        e.detail.target.el.body.position.z < -35
+        e.detail.target.el.body.position.z < -30
       ) {
-        // console.log("Player has collided with body #" + e.detail.body.el.id);
-
         e.detail.target.el.removeEventListener("collide", this.shoot);
         var scene = document.querySelector("#scene");
         scene.removeChild(e.detail.target.el);
       }
     } else {
-      // console.log("Player has collided with body #" + e.detail.body.el.id);
-
       //explode the box once hit
-      var box = e.detail.body.el;
-      box.setAttribute("material", {
-        src: "./images/fire-removebg-preview.png",
-        repeat: "1 1 1",
-        opacity: 0.0,
-        transparent: true,
-      });
+      if (e.detail.body.el.id.includes("box")) {
+        var box = e.detail.body.el;
+        box.setAttribute("material", {
+          src: "./images/fire-removebg-preview.png",
+          repeat: "1 1 1",
+          opacity: 0.0,
+          transparent: true,
+        });
 
-      box.setAttribute("explosion", {
-        id: e.detail.body.el.id,
-      });
+        box.setAttribute("explosion", {
+          id: e.detail.body.el.id,
+        });
+        //this.data.targets-=1
+        //this.targetsFired()
+      }
 
       //remove event listener
       e.detail.target.el.removeEventListener("collide", this.shoot);
@@ -81,4 +86,12 @@ AFRAME.registerComponent("bullets", {
     var entity = document.querySelector("#sound2");
     entity.components.sound.playSound();
   },
+  targetsFired: function() {
+    const element = document.querySelector("#count");
+    let currentTargets = parseInt(element.getAttribute("text").value);
+    currentTargets -= 1;
+    element.setAttribute("text", {
+      value: currentTargets
+    });
+  }
 });

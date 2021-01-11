@@ -25,17 +25,27 @@
           id="shooter"
           src="./models/shooter/gun.gltf"
         ></a-asset-item>
+        <a-asset-item
+        id="biped_robot"
+        src="./models/biped_robot/scene.gltf"
+      ></a-asset-item>
         <img id="land" src="./images/land.jpg" />
         <audio id="footstep" src="./sounds/footStep.mp3"></audio>
         <audio id="shoot" src="./sounds/shoot.mp3"></audio>
       </a-assets>
+
+      <!--Text-->
+      <a-entity id="boxtargets" position="0.4 0.2 -0.8" width="200" height="100" text="font: mozillavr; value: Shoot\nBoxes">
+        <!-- <a-entity id="count"  position="0.3 -0.018 0" text="font: mozillavr; value: 10"></a-entity> -->
+      </a-entity>
 
       <!--Sounds-->
       <a-entity id="sound1" sound="src: #footstep; autoplay: false; volume: 4;loop:false">
       <a-entity id="sound2" sound="src: #shoot; autoplay: false; volume: 1;loop:false">
 
       <!--Light-->
-      <a-entity light="type: ambient; color: #fff; intensity:0.5"></a-entity>
+      <a-entity light="type: ambient; color: yellow; intensity:0.2"></a-entity>
+      <!-- <a-entity light="type: directional; color: #EEE; intensity: 0.5" position="-1 1 0"></a-entity> -->
 
       <!--A-Frame Environment-->
 
@@ -46,6 +56,7 @@
         id="camera-rig"
         movement-controls="speed: 0.2; constrainToNavMesh: true"
         position="0 1 2"
+       
       >
         <!-- Camera -->
         <a-entity
@@ -61,26 +72,32 @@
             position="0 -4.5 2.8"
             rotation="0 180 0"
             scale="0.35 1 1" 
-            player-movement           
+            player-movement 
+                 
           >
           </a-entity>
+          
         </a-entity>
       </a-entity>
 
       <a-entity boxes wire-fence></a-entity>
 
-      <a-entity bullets></a-entity>
+      <a-entity bullets></a-entity>    
      
-      <!-- <a-plane
+
+      <a-plane
         id="ground"
+        src="#land"
+        repeat="5 5"
         position="0 1 0"
         rotation="-90 0 0"
         height="200"
         width="200" 
-        color="#4D3119"
+        color="#B18963"
         static-body
+        visible="false"
       >
-      </a-plane> -->
+      </a-plane>
 
       <!-- Navigation Mesh -->
       <a-entity
@@ -92,7 +109,14 @@
       >
       </a-entity>
 
-     <!-- <a-sphere id="x" radius='1' position='0 5 -5' dynamic-body> -->
+      <a-entity
+      id="robo"
+      gltf-model="#biped_robot"
+      position="-2 0 -15"      
+      scale="0.1 0.1 0.1"       
+      animation-mixer   
+    >
+    </a-entity>
     </a-scene>
   </body>
 </html>
