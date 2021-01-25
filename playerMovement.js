@@ -1,6 +1,5 @@
 AFRAME.registerComponent("player-movement", {
-  init: function () {
-    //this.jump();
+  init: function () {   
     this.walk();
   },
   walk: function () {
@@ -16,19 +15,5 @@ AFRAME.registerComponent("player-movement", {
       }
     });
   },
-  jump: function () {
-    window.addEventListener("keydown", (e) => {
-      if (e.key === " ") {
-        var cameraRig = document.querySelector("#camera-rig");
-        var position = cameraRig.getAttribute("position");
-        var direction = { x: 0, y: -1, z: 0 };
-        cameraRig.setAttribute("velocity", direction);
-      }
-    });
-
-    window.addEventListener("keyup", (e) => {
-      if (e.key === " ") {
-      }
-    });
-  },
+ 
 });

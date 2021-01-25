@@ -1,7 +1,5 @@
+var nextLevel = "index.html"
 AFRAME.registerComponent("bullets", {
-  schema:{
-    targets:{type:"number",default:10}
-  },
 
   init: function () {
     this.shootBullet();
@@ -19,11 +17,10 @@ AFRAME.registerComponent("bullets", {
         bullet.setAttribute("position", {
           x: position.x,
           y: position.y + 1.3,
-          z: position.z -0.8,
+          z: position.z - 0.8,
         });
 
         //set the velocity and it's direction
-
         var direction = new THREE.Vector3();
         var camera = document.querySelector("#camera").object3D;
         camera.getWorldDirection(direction);
@@ -35,18 +32,23 @@ AFRAME.registerComponent("bullets", {
           radius: 0.1,
         });
 
+        scene.appendChild(bullet);
+
         bullet.setAttribute("dynamic-body", {
           shape: "sphere",
           mass: "0",
         });
-        scene.appendChild(bullet);
 
         bullet.addEventListener("collide", this.removeBullet);
+
+        //shooting sound
         this.shootSound();
       }
     });
   },
   removeBullet: function (e) {
+    console.log(e.detail.body.el.id)
+
     if (e.detail.body.el.id === "environment") {
       if (
         e.detail.target.el.body.position.z > 85 &&
@@ -56,24 +58,39 @@ AFRAME.registerComponent("bullets", {
         var scene = document.querySelector("#scene");
         scene.removeChild(e.detail.target.el);
       }
-    } else {
-      //explode the box once hit
-      if (e.detail.body.el.id.includes("box")) {
-        var box = e.detail.body.el;
-        box.setAttribute("material", {
-          src: "./images/fire-removebg-preview.png",
-          repeat: "1 1 1",
-          opacity: 0.0,
-          transparent: true,
+    }
+    else {
+      //apply force on the enemy tank once hit      
+      if (e.detail.body.el.id.includes("enemy")) {
+
+        var elementHit = e.detail.body.el;
+
+        elementHit.setAttribute("dynamic-body", {
+         mass:200,
         });
 
-        box.setAttribute("explosion", {
-          id: e.detail.body.el.id,
+        var impulse = new CANNON.Vec3(0, 0, 2);
+        var worldPoint = new CANNON.Vec3().copy(
+          elementHit.getAttribute("position")
+        );
+
+        elementHit.body.applyImpulse(impulse, worldPoint);
+
+        var tankDestroyed = document.querySelector("#" + e.detail.body.el.id);
+        tankDestroyed.setAttribute("class", "destroyed");        
+
+        var element = document.querySelector("#countTank");
+        var tanksFired = parseInt(element.getAttribute("text").value);
+        tanksFired -= 1;
+        
+        element.setAttribute("text", {
+          value: tanksFired
         });
-        //this.data.targets-=1
-        //this.targetsFired()
+
+        if (tanksFired === 0) {          
+          location.href = nextLevel;
+        }
       }
-
       //remove event listener
       e.detail.target.el.removeEventListener("collide", this.shoot);
 
@@ -86,12 +103,4 @@ AFRAME.registerComponent("bullets", {
     var entity = document.querySelector("#sound2");
     entity.components.sound.playSound();
   },
-  targetsFired: function() {
-    const element = document.querySelector("#count");
-    let currentTargets = parseInt(element.getAttribute("text").value);
-    currentTargets -= 1;
-    element.setAttribute("text", {
-      value: currentTargets
-    });
-  }
 });

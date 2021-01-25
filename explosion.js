@@ -11,7 +11,6 @@ AFRAME.registerComponent("explosion", {
 
       var box = document.querySelector("#" + this.data.id);
 
-      console.log(box);
       position = box.getAttribute("position");
 
       for (var i = 0; i < 6; i++) {
